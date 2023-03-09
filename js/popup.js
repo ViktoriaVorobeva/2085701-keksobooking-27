@@ -18,8 +18,8 @@ const renderDescription = (cardElement, description) => {
 };
 
 const renderFeatures = (cardElement, features) => {
-  const featuresList = document.querySelector('.popup__features');
-  const featuresItems = cardElement.querySelectorAll('.popup__feature');
+  const featuresList = cardElement.querySelector('.popup__features');
+  const featuresItems = featuresList.querySelectorAll('.popup__feature');
 
   if (features && features.length) {
     const modifiers = features.map((feature) => `popup__feature--${feature}`);

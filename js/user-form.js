@@ -110,13 +110,29 @@ roomsField.addEventListener('change', onRoomsNumberChange);
 capacityField.addEventListener('change', onCapacityChange);
 addressField.addEventListener('change', onAddressFocus);
 
-userForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
+const setUserFormSubmit = (onSuccess, onFail) => {
+  userForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
 
-  const isValide = pristine.validate();
-  if (isValide) {
-    userForm.submit();
-    adFormReset();
-    pristine.reset();
-  }
-});
+    const isValide = pristine.validate();
+    if (isValide) {
+      const formData = new FormData(evt.target);
+      fetch('https://27.javascript.pages.academy/keksobooking',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'User-Agent': 'Google Chrome'
+          },
+          body: JSON.stringify(formData),
+        },
+      )
+        .then(() => onSuccess())
+        .catch(() => onFail());
+      adFormReset();
+      pristine.reset();
+    }
+  });
+};
+
+export {setUserFormSubmit};

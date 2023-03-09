@@ -1,8 +1,9 @@
 import { turnAdFormOn, turnAdFormOff } from './form.js';
-import './user-form.js';
-import {initMap, setAdPins, setOnMapLoad, setOnMainPinMove} from './map.js';
+import {setUserFormSubmit} from './user-form.js';
+import {initMap, setOnMapLoad, setOnMainPinMove} from './map.js';
 import './slider.js';
-import { createAnnouncements} from './data.js';
+import {getOffers} from './api.js';
+import {createSuccessMessage, createErrorMessage} from './submit-message.js';
 
 const centerCoordinates = {
   lat: 35.66376,
@@ -10,14 +11,14 @@ const centerCoordinates = {
 };
 const MAP_SCALE = 12;
 
-const getOffers = createAnnouncements();
-
 setOnMapLoad(() => {
   turnAdFormOn();
   setOnMainPinMove();
-  setAdPins(getOffers);
+  getOffers();
 });
 
 turnAdFormOff();
 initMap(centerCoordinates, MAP_SCALE);
+
+setUserFormSubmit(createSuccessMessage, createErrorMessage);
 

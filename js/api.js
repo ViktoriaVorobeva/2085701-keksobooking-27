@@ -1,9 +1,7 @@
-import {setAdPins} from './map.js';
-
-const getOffers = () => {
+const getOffers = (onSuccess) => {
   fetch('https://27.javascript.pages.academy/keksobooking/data')
     .then((responce) => responce.json())
-    .then((offers) => setAdPins(offers));
+    .then((offers) => onSuccess(offers));
 };
 
 export {getOffers};

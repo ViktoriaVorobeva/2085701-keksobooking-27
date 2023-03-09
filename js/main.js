@@ -1,6 +1,6 @@
 import { turnAdFormOn, turnAdFormOff } from './form.js';
 import {setUserFormSubmit} from './user-form.js';
-import {initMap, setOnMapLoad, setOnMainPinMove} from './map.js';
+import {initMap, setOnMapLoad, setOnMainPinMove, setAdPins} from './map.js';
 import './slider.js';
 import {getOffers} from './api.js';
 import {createSuccessMessage, createErrorMessage} from './submit-message.js';
@@ -14,7 +14,7 @@ const MAP_SCALE = 12;
 setOnMapLoad(() => {
   turnAdFormOn();
   setOnMainPinMove();
-  getOffers();
+  getOffers(setAdPins);
 });
 
 turnAdFormOff();

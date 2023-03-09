@@ -127,10 +127,15 @@ const setUserFormSubmit = (onSuccess, onFail) => {
           body: JSON.stringify(formData),
         },
       )
-        .then(() => onSuccess())
+        .then((responce) => {
+          if (responce.ok) {
+            onSuccess();
+            adFormReset();
+            pristine.reset();
+          } else {
+            onFail();
+          }})
         .catch(() => onFail());
-      adFormReset();
-      pristine.reset();
     }
   });
 };

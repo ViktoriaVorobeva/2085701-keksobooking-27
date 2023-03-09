@@ -1,7 +1,7 @@
 import {isEscapeKey} from './util.js';
 
-const successElementTemplate = document.querySelector('#success').textContent.querySelector('success');
-const errorElementTemplate = document.querySelector('#error').textContent.querySelector('error');
+const successElementTemplate = document.querySelector('#success').content.querySelector('.success');
+const errorElementTemplate = document.querySelector('#error').content.querySelector('.error');
 
 const onMessageEscapeDown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -11,14 +11,6 @@ const onMessageEscapeDown = (evt) => {
 };
 
 const onDocumentClick = () => closeMessage();
-
-const closeMessage = () => {
-  const messageElement = document.querySelector('.error') || document.querySelector('.success');
-  messageElement.remove();
-  document.removeEventListener('keydown', onMessageEscapeDown);
-  document.removeEventListener('click', onDocumentClick);
-  document.body.style.overflow = 'auto';
-};
 
 const createSuccessMessage = () => {
   const successElement = successElementTemplate.cloneNode(true);
@@ -35,5 +27,13 @@ const createErrorMessage = () => {
   document.addEventListener('click', onDocumentClick);
   document.body.style.overflow = 'hidden';
 };
+
+function closeMessage () {
+  const messageElement = document.querySelector('.error') || document.querySelector('.success');
+  messageElement.remove();
+  document.removeEventListener('keydown', onMessageEscapeDown);
+  document.removeEventListener('click', onDocumentClick);
+  document.body.style.overflow = 'auto';
+}
 
 export {createSuccessMessage, createErrorMessage};

@@ -2,6 +2,7 @@ import { turnAdFormOn, turnAdFormOff } from './form.js';
 import {setUserFormSubmit} from './user-form.js';
 import {initMap, setOnMapLoad, setOnMainPinMove, setAdPins} from './map.js';
 import './slider.js';
+import {onError} from './util.js';
 import {getOffers} from './api.js';
 import {createSuccessMessage, createErrorMessage} from './submit-message.js';
 
@@ -11,14 +12,19 @@ const centerCoordinates = {
 };
 const MAP_SCALE = 12;
 
-setOnMapLoad(() => {
-  turnAdFormOn();
-  setOnMainPinMove();
-  getOffers(setAdPins);
-});
+const mapLoad = () => {
+  setOnMapLoad(() => {
+    turnAdFormOn();
+    setOnMainPinMove();
+    getOffers(setAdPins, onError);
+  });
+};
+
+mapLoad();
 
 turnAdFormOff();
-initMap(centerCoordinates, MAP_SCALE);
+const mapReset = () => initMap(centerCoordinates, MAP_SCALE);
+mapReset();
 
-setUserFormSubmit(createSuccessMessage, createErrorMessage);
+setUserFormSubmit(createSuccessMessage, createErrorMessage, mapLoad, mapReset);
 

@@ -1,4 +1,10 @@
+import {sendData} from './api.js';
 import { adFormReset } from './form.js';
+
+const centerCoordinates = {
+  lat: 35.66376,
+  lng: 139.7839,
+};
 
 const TYPE_MIN = {
   'bungalow': 0,
@@ -30,6 +36,9 @@ const timeInField = userForm.querySelector('#timein');
 const timeOutField = userForm.querySelector('#timeout');
 const roomsField = userForm.querySelector('#room_number');
 const capacityField = userForm.querySelector('#capacity');
+
+const buttonSubmit = document.querySelector('.ad-form').querySelector('.ad-form__submit');
+const sliderElement = document.querySelector('.ad-form__slider');
 
 const pristine = new Pristine(userForm, {
   classTo: 'ad-form__element',
@@ -110,32 +119,35 @@ roomsField.addEventListener('change', onRoomsNumberChange);
 capacityField.addEventListener('change', onCapacityChange);
 addressField.addEventListener('change', onAddressFocus);
 
-const setUserFormSubmit = (onSuccess, onFail) => {
+const blockSubmitButton = () => {
+  buttonSubmit.setAttribute('disabled', true);
+  buttonSubmit.textContent = 'Публикуется...';
+};
+
+const unblockSubmitButton = () => {
+  buttonSubmit.removeAttribute('disabled');
+  buttonSubmit.textContent = 'Опубликовать';
+};
+
+const setUserFormSubmit = (onSuccess, onFail, cd, dc) => {
   userForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
-
     const isValide = pristine.validate();
+    const formData = new FormData(evt.target);
     if (isValide) {
-      const formData = new FormData(evt.target);
-      fetch('https://27.javascript.pages.academy/keksobooking',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'User-Agent': 'Google Chrome'
-          },
-          body: JSON.stringify(formData),
-        },
-      )
-        .then((responce) => {
-          if (responce.ok) {
-            onSuccess();
-            adFormReset();
-            pristine.reset();
-          } else {
-            onFail();
-          }})
-        .catch(() => onFail());
+      blockSubmitButton();
+      sendData(() => {
+        onSuccess();
+        adFormReset();
+        pristine.reset();
+        sliderElement.noUiSlider.set(1000);
+        addressField.value = `${centerCoordinates.lat} ${centerCoordinates.lng}`;
+        cd();
+        dc();
+      },
+      onFail,
+      formData);
+      unblockSubmitButton();
     }
   });
 };
